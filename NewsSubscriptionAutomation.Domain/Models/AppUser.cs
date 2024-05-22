@@ -10,9 +10,9 @@ public class AppUser : IdentityUser<Guid>
     public string LastName { get; set; } = string.Empty;
     public string FullName => GetName();
     public bool IsActive { get; set; } = false;
-    public Region Region => CityRegionMapper.GetRegion(City);
+    //public Region Region => CityRegionMapper.GetRegion(City);
     public City City {  get; set; }
-    public SubscriptionType SubscriptionType {  get; set; }  
+    public ICollection<NewsPaper>? NewsPapers {  get; set; }
 
     public string GetName()
     {

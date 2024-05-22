@@ -13,6 +13,7 @@ public sealed record RegisterCommand(
     string Password,
     bool IsActive,
     City City,
+    ICollection<NewsPaper> NewsPapers
     //Region Region,
-    SubscriptionType SubscriptionType): IRequest<Result<string>>;
+  ): IRequest<Result<string>>;
 

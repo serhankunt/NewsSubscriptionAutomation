@@ -15,7 +15,7 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterCommand request,CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request,cancellationToken);
@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
         return StatusCode(response.StatusCode,response);
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(LoginCommand request,CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken);

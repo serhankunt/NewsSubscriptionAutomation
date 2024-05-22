@@ -28,22 +28,12 @@ public class RegisterCommandHandler(
         }
 
         bool isCity = await userManager.Users.AnyAsync(p => p.City == request.City, cancellationToken);
+
         if (isCity)
         {
             return Result<string>.Failure(errorMessage: "Lütfen geçerli bir þehir giriniz.");
         }
        
-
-      
-
-       
-
-        bool isSubscriptionType = await userManager.Users.AnyAsync(p => p.SubscriptionType == request.SubscriptionType, cancellationToken);
-        if (isSubscriptionType)
-        {
-            return Result<string>.Failure(errorMessage: "Lütfen geçerli bir talep þekli giriniz.");
-        }
-
         AppUser user = new()
         {
             FirstName = request.FirstName,

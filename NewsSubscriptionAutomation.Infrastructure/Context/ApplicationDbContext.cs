@@ -14,6 +14,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<AppUser,AppRole,Gui
 
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<AppRole> AppRoles { get; set; }
+    public DbSet<NewsPaper> NewsPapers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -22,6 +23,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<AppUser,AppRole,Gui
         builder.Ignore<IdentityUserClaim<Guid>>();
         builder.Ignore<IdentityUserToken<Guid>>();
         builder.Ignore<IdentityUserRole<Guid>>();
+
+      
     }
 
 }
