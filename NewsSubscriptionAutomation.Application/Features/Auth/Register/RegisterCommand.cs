@@ -12,8 +12,8 @@ public sealed record RegisterCommand(
     string UserName,
     string Password,
     bool IsActive,
-    City City,
-    ICollection<NewsPaper> NewsPapers
+    City City
+    //ICollection<NewsPaper> NewsPapers
     //Region Region,
   ): IRequest<Result<string>>;
 

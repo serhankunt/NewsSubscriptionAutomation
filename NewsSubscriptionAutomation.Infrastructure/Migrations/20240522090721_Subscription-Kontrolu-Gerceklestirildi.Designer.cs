@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsSubscriptionAutomation.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using NewsSubscriptionAutomation.Infrastructure.Context;
 namespace NewsSubscriptionAutomation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240522090721_Subscription-Kontrolu-Gerceklestirildi")]
+    partial class SubscriptionKontroluGerceklestirildi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AppUserNewsPaper", b =>
+                {
+                    b.Property<int>("NewsPapersId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NewsPapersId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("AppUserNewsPaper");
+                });
 
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppRole", b =>
                 {
@@ -109,21 +127,6 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
                     b.ToTable("AppUser");
                 });
 
-            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUserNewsPaper", b =>
-                {
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("NewsPaperId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppUserId", "NewsPaperId");
-
-                    b.HasIndex("NewsPaperId");
-
-                    b.ToTable("AppUserNewsPapers");
-                });
-
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.NewsPaper", b =>
                 {
                     b.Property<int>("Id")
@@ -151,55 +154,45 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("City")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
                     b.Property<int>("NewsPaper")
                         .HasColumnType("int");
 
-                    b.Property<int>("Region")
-                        .HasColumnType("int");
-
                     b.Property<int>("SubscriptionType")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUserNewsPaper", b =>
+            modelBuilder.Entity("AppUserNewsPaper", b =>
                 {
-                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.AppUser", "AppUser")
-                        .WithMany("UserNewsPapers")
-                        .HasForeignKey("AppUserId")
+                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.NewsPaper", null)
+                        .WithMany()
+                        .HasForeignKey("NewsPapersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.NewsPaper", "NewsPaper")
-                        .WithMany("UserNewsPapers")
-                        .HasForeignKey("NewsPaperId")
+                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("NewsPaper");
                 });
 
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.Subscription", b =>
                 {
                     b.HasOne("NewsSubscriptionAutomation.Domain.Models.AppUser", "User")
                         .WithMany("Subscriptions")
-                        .HasForeignKey("AppUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -209,13 +202,6 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUser", b =>
                 {
                     b.Navigation("Subscriptions");
-
-                    b.Navigation("UserNewsPapers");
-                });
-
-            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.NewsPaper", b =>
-                {
-                    b.Navigation("UserNewsPapers");
                 });
 #pragma warning restore 612, 618
         }

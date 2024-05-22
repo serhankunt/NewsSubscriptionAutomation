@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsSubscriptionAutomation.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using NewsSubscriptionAutomation.Infrastructure.Context;
 namespace NewsSubscriptionAutomation.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240522092550_mg1")]
+    partial class mg1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,6 +83,9 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("NewsPaperId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(max)");
 
@@ -106,22 +112,9 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUser");
-                });
-
-            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUserNewsPaper", b =>
-                {
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("NewsPaperId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppUserId", "NewsPaperId");
-
                     b.HasIndex("NewsPaperId");
 
-                    b.ToTable("AppUserNewsPapers");
+                    b.ToTable("AppUser");
                 });
 
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.NewsPaper", b =>
@@ -154,16 +147,10 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("City")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
                     b.Property<int>("NewsPaper")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Region")
                         .HasColumnType("int");
 
                     b.Property<int>("SubscriptionType")
@@ -176,23 +163,11 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUserNewsPaper", b =>
+            modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUser", b =>
                 {
-                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.AppUser", "AppUser")
-                        .WithMany("UserNewsPapers")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.NewsPaper", "NewsPaper")
-                        .WithMany("UserNewsPapers")
-                        .HasForeignKey("NewsPaperId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("NewsPaper");
+                    b.HasOne("NewsSubscriptionAutomation.Domain.Models.NewsPaper", null)
+                        .WithMany("Users")
+                        .HasForeignKey("NewsPaperId");
                 });
 
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.Subscription", b =>
@@ -209,13 +184,11 @@ namespace NewsSubscriptionAutomation.Infrastructure.Migrations
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.AppUser", b =>
                 {
                     b.Navigation("Subscriptions");
-
-                    b.Navigation("UserNewsPapers");
                 });
 
             modelBuilder.Entity("NewsSubscriptionAutomation.Domain.Models.NewsPaper", b =>
                 {
-                    b.Navigation("UserNewsPapers");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
